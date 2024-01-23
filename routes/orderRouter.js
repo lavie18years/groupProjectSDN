@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const Order = require("../models/product");
+const Order = require("../models/order");
 const orderRouter = express.Router();
 orderRouter.use(bodyParser.json());
 
