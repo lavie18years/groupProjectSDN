@@ -12,7 +12,9 @@ accountRouter
   .route("/")
 
   .get((req, res, next) => {
-    Accounts.find({})
+    // Accounts.find({})
+    Accounts.find()
+      .populate("role", "name")
       .then(
         (dishes) => {
           res.statusCode = 200;
@@ -53,7 +55,7 @@ accountRouter
       .catch((err) => next(err));
   });
 
-  accountRouter
+accountRouter
   .route("/:dishId")
   .get((req, res, next) => {
     Accounts.findById(req.params.dishId)

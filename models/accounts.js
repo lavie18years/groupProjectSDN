@@ -1,7 +1,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 require("mongoose-currency").loadType(mongoose);
-const ObjectId = mongoose.Types.ObjectId;
+// const ObjectId = mongoose.Types.ObjectId;
+const isRoleSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    }
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const accountSchema = new Schema(
   {
@@ -31,13 +46,18 @@ const accountSchema = new Schema(
       default: false,
     },
     role: {
-      type: Schema.Types.ObjectId,
-      ref: "isRole",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "IsRole",
       required: true,
     },
+    // bắt buộc fe phải hỏi be có mấy front để fe bắt trường hợp luôn.
+    // role: {
+    //   type: String,
+    //   required: true
+    // },
     phone: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     }
   },
   {

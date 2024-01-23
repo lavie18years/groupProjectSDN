@@ -14,6 +14,7 @@ const mongoose = require("mongoose");
 
 const Accounts = require("./models/accounts");
 const accountRouter = require("./routes/accountRouter");
+const roleRouter = require("./routes/roleRouter");
 
 const url = "mongodb://localhost:27017/conFusion";
 const connect = mongoose.connect(url);
@@ -40,7 +41,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/accounts", accountRouter)
-
+app.use("/roles", roleRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
