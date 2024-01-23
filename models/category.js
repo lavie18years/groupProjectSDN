@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 require("mongoose-currency").loadType(mongoose);
 
-const categotySchema = new Schema(
+const categorySchema = new Schema(
   {
     name: {
       type: String,
@@ -17,5 +17,5 @@ const categotySchema = new Schema(
     timestamps: true,
   }
 );
-var Category = mongoose.model("Categoty", categorySchema);
+var Category = mongoose.model("Category", categorySchema);
 module.exports = Category;
