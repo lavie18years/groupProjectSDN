@@ -14,7 +14,8 @@ accountRouter
   .get((req, res, next) => {
     // Accounts.find({})
     Accounts.find()
-      .populate("role", "name")
+      // .populate("role", "name")
+      .populate("role")
       .then(
         (dishes) => {
           res.statusCode = 200;
