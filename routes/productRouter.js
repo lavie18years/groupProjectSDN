@@ -8,7 +8,9 @@ productRouter.use(bodyParser.json());
 productRouter
   .route("/")
   .get((req, res, next) => {
-    Product.find({})
+    // Product.find({})
+    Product.find()
+      .populate("category")
       .then(
         (Product) => {
           res.statusCode = 200;
