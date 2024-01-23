@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 require("mongoose-currency").loadType(mongoose);
-// const ObjectId = mongoose.Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 
 const accountSchema = new Schema(
   {
@@ -31,7 +31,8 @@ const accountSchema = new Schema(
       default: false,
     },
     role: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "isRole",
       required: true,
     },
     phone: {
