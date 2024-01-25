@@ -13,10 +13,6 @@ var orderproductSchema = new Schema({
     type: Number,
     required: true,
   },
-  // totalPrice: {
-  //   type: Number,
-  //   required: true,
-  // },
   status: {
     type: Boolean,
     default: false,
@@ -33,6 +29,10 @@ const orderSchema = new Schema(
     statusOrder: {
       type: Boolean,
       default: false,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
     },
     // product này chứa nhiều
     products: [orderproductSchema],

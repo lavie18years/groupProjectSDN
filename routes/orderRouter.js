@@ -116,7 +116,7 @@ orderRouter
       .then(
         (order) => {
           res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
+          res.setHeader("Content-Type", "application/json");    
           res.json(order);
         },
         (err) => next(err)
