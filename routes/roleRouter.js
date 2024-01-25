@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const Roles = require("../models/isRole");
+const Roles = require("../models/isRole")
 
 const roleRouter = express.Router();
 
