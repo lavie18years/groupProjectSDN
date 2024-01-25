@@ -11,6 +11,8 @@ productRouter
     // Product.find({})
     Product.find()
       .populate("category")
+      .populate("account")
+      .populate("account.author")
       .then(
         (Product) => {
           res.statusCode = 200;
@@ -55,6 +57,9 @@ productRouter
   .route("/:productId")
   .get((req, res, next) => {
     Product.findById(req.params.productId)
+      .populate("category")
+      .populate("account")
+      .populate("comments.author")
       .then(
         (product) => {
           res.statusCode = 200;
@@ -99,10 +104,30 @@ productRouter
       )
       .catch((err) => next(err));
   });
+
+productRouter.route("/category/:categoryId").get((req, res, next) => {
+  Product.find({
+    category: { $in: req.params.categoryId },
+  })
+    .populate("category")
+    .populate("account")
+    .populate("account.author")
+    .then(
+      (product) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(product);
+      },
+      (err) => next(err)
+    )
+    .catch((err) => next(err));
+});
+
 productRouter
   .route("/:productId/comments")
   .get((req, res, next) => {
     Product.findById(req.params.productId)
+      .populate("comments.author")
       .then(
         (product) => {
           if (product != null) {
@@ -182,6 +207,7 @@ productRouter
   .route("/:productId/comments/:commentId")
   .get((req, res, next) => {
     Product.findById(req.params.productId)
+      .populate("comments.author")
       .then(
         (product) => {
           if (

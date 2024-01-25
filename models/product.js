@@ -16,7 +16,8 @@ var commentSchema = new Schema(
       required: true,
     },
     author: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Account",
       required: true,
     },
   },
@@ -27,6 +28,11 @@ var commentSchema = new Schema(
 
 const productSchema = new Schema(
   {
+    account: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
+    },
     name: {
       type: String,
       required: true,
