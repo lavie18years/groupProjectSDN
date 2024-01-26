@@ -69,10 +69,10 @@ orderRouter
       )
       .catch((err) => next(err));
   })
-  .post((req, res, next) => {
-    res.statusCode = 403;
-    res.end("POST operation not supported on /order/" + req.params.accountId);
-  })
+  // .post((req, res, next) => {
+  //   res.statusCode = 403;
+  //   res.end("POST operation not supported on /order/" + req.params.accountId);
+  // })
   .put((req, res, next) => {
     Order.findOneAndUpdate(
       {
@@ -93,18 +93,18 @@ orderRouter
       )
       .catch((err) => next(err));
   })
-  .delete((req, res, next) => {
-    Order.findByIdAndDelete(req.params.accountId)
-      .then(
-        (resp) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(resp);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
-  });
+  // .delete((req, res, next) => {
+  //   Order.findByIdAndDelete(req.params.accountId)
+  //     .then(
+  //       (resp) => {
+  //         res.statusCode = 200;
+  //         res.setHeader("Content-Type", "application/json");
+  //         res.json(resp);
+  //       },
+  //       (err) => next(err)
+  //     )
+  //     .catch((err) => next(err));
+  // });
 
 orderRouter
   .route("/:orderId")
