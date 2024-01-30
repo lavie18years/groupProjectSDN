@@ -97,18 +97,38 @@ feedbackRouter
         )
         .catch((err) => next(err));
 })
-.get((req, res, next) => {
-    Feedback.find({})
-        .populate('userId')
-        .populate('productId')
-        .then(
-            (feedback) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(feedback);
-            },
-            (err) => next(err)
-        )
+// .get((req, res, next) => {
+//     Feedback.findById({ _id: req.params.id, userId: req.query.id, productId: req.query.id })
+//         .populate('userId')
+//         .populate('productId')
+//         .then(
+//             (feedback) => {
+//                 res.statusCode = 200;
+//                 res.setHeader('Content-Type', 'application/json');
+//                 res.json(feedback);
+//             },
+//             (err) => next(err)
+//         )
+// })
+.get(async (req, res, next) => {
+    try {
+        const { feedbackId, userId, productId } = req.query;
+
+        let query = {};
+        if (feedbackId) query._id = feedbackId;
+        if (userId) query.userId = userId;
+        if (productId) query.productId = productId;
+
+        const feedback = await Feedback.find(query)
+            .populate('userId')
+            .populate('productId');
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(feedback);
+    } catch (err) {
+        next(err);
+    }
 })
 ;
 
