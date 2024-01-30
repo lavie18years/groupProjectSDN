@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const feedbackSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Account",
       },
     productId: {
         type: Schema.Types.ObjectId,

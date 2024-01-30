@@ -29,6 +29,8 @@ feedbackRouter
 .route('/')
 .get((req, res, next) => {
     Feedback.find({})
+        .populate('userId')
+        .populate('productId')
         .then(
             (feedback) => {
                 res.statusCode = 200;
@@ -38,18 +40,29 @@ feedbackRouter
             (err) => next(err)
         )
 })
-.post((req, res, next) => {
-    Feedback.create(req.body)
-        .then(
-            (feedback) => {
-                console.log('Feedback Created ', feedback);
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(feedback);
-            },
-            (err) => next(err)
-        )
-        .catch((err) => next(err));
+// .post((req, res, next) => {
+//     Feedback.create(req.body)
+//         .then(
+//             (feedback) => {
+//                 console.log('Feedback Created ', feedback);
+//                 res.statusCode = 200;
+//                 res.setHeader('Content-Type', 'application/json');
+//                 res.json(feedback);
+//             },
+//             (err) => next(err)
+//         )
+//         .catch((err) => next(err));
+// })
+.post(async (req, res, next) => {
+    try {
+        const feedback = await Feedback.create(req.body);
+        console.log('Feedback Created ', feedback);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(feedback);
+    } catch (err) {
+        next(err);
+    }
 })
 .delete((req, res, next) => {
     Feedback.findByIdAndRemove(req.params.id)
@@ -83,7 +96,21 @@ feedbackRouter
             (err) => next(err)
         )
         .catch((err) => next(err));
-});
+})
+.get((req, res, next) => {
+    Feedback.find({})
+        .populate('userId')
+        .populate('productId')
+        .then(
+            (feedback) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(feedback);
+            },
+            (err) => next(err)
+        )
+})
+;
 
 
 
