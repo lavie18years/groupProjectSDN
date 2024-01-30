@@ -1,6 +1,12 @@
 const express = require('express');
 const feedbackRouter = express.Router();
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
+;
+const  multer  = require('multer');
+const storage = multer.memoryStorage();  // Store files in memory (for demo)
+const upload = multer({ storage: storage });
+
+
 
 const Feedback = require('../models/feedback');
 // const feedbackController = require('../controller/feedbackController');
@@ -27,18 +33,15 @@ feedbackRouter.use(bodyParser.json());
 
 feedbackRouter
 .route('/')
-.get((req, res, next) => {
-    Feedback.find({})
-        .populate('userId')
-        .populate('productId')
-        .then(
-            (feedback) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(feedback);
-            },
-            (err) => next(err)
-        )
+.get(async(req, res, next) => {
+    try {
+        const feedback = await Feedback.find({})
+            .populate('userId', 'name _id')
+            .populate('productId' , 'name _id');
+            res.status(200).send({ message: 'Feedback match ', feedback });
+    } catch (err) {
+        next(err);
+    }
 })
 // .post((req, res, next) => {
 //     Feedback.create(req.body)
@@ -53,29 +56,35 @@ feedbackRouter
 //         )
 //         .catch((err) => next(err));
 // })
-.post(async (req, res, next) => {
+// .post(async (req, res, next) => {
+//     try {
+//         const feedback = await Feedback.create(req.body);
+//         console.log('Feedback Created ', feedback);
+//         res.statusCode = 200;
+//         res.setHeader('Content-Type', 'application/json');
+//         res.json(feedback);
+//     } catch (err) {
+//         next(err);
+//     }
+// })
+.post(upload.single('content'),async (req, res, next) => {
     try {
-        const feedback = await Feedback.create(req.body);
+
+        const content = req.body.content;  // Access other form fields
+        const userId = req.body.userId;
+        const productId = req.body.productId;
+
+        const feedback = await Feedback.create(req.body);    
         console.log('Feedback Created ', feedback);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(feedback);
+        res.status(200).send({ message: 'Feedback Created ', feedback });
+        // res.json(feedback);
+
+
+        
     } catch (err) {
         next(err);
-    }
-})
-.delete((req, res, next) => {
-    Feedback.findByIdAndRemove(req.params.id)
-        .then(
-            (feedback) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(feedback);
-            },
-            (err) => next(err)
-        )
-        .catch((err) => next(err));
-});
+    }});
+
 
 
 
@@ -97,19 +106,7 @@ feedbackRouter
         )
         .catch((err) => next(err));
 })
-// .get((req, res, next) => {
-//     Feedback.findById({ _id: req.params.id, userId: req.query.id, productId: req.query.id })
-//         .populate('userId')
-//         .populate('productId')
-//         .then(
-//             (feedback) => {
-//                 res.statusCode = 200;
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.json(feedback);
-//             },
-//             (err) => next(err)
-//         )
-// })
+
 .get(async (req, res, next) => {
     try {
         const { feedbackId, userId, productId } = req.query;
@@ -120,12 +117,20 @@ feedbackRouter
         if (productId) query.productId = productId;
 
         const feedback = await Feedback.find(query)
-            .populate('userId')
-            .populate('productId');
+            .populate('userId', 'name _id')
+            .populate('productId', 'name _id');
 
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(feedback);
+        res.status(200).send({ message: 'Feedback match ', feedback });
+        // res.setHeader('Content-Type', 'application/json');
+        // res.json(feedback);
+    } catch (err) {
+        next(err);
+    }
+})
+.delete(async (req, res, next) => {
+    try {
+        const feedback = await Feedback.findByIdAndDelete(req.params.id);
+        res.status(200).send({ message: 'Feedback has remove', feedback});
     } catch (err) {
         next(err);
     }
