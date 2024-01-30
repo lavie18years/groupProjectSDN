@@ -73,26 +73,26 @@ orderRouter
   //   res.statusCode = 403;
   //   res.end("POST operation not supported on /order/" + req.params.accountId);
   // })
-  .put((req, res, next) => {
-    Order.findOneAndUpdate(
-      {
-        category: { $in: req.params.accountId },
-      },
-      {
-        $set: req.body,
-      },
-      { new: true }
-    )
-      .then(
-        (order) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(order);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
-  })
+  // .put((req, res, next) => {
+  //   Order.findOneAndUpdate(
+  //     {
+  //       category: { $in: req.params.accountId },
+  //     },
+  //     {
+  //       $set: req.body,
+  //     },
+  //     { new: true }
+  //   )
+  //     .then(
+  //       (order) => {
+  //         res.statusCode = 200;
+  //         res.setHeader("Content-Type", "application/json");
+  //         res.json(order);
+  //       },
+  //       (err) => next(err)
+  //     )
+  //     .catch((err) => next(err));
+  // })
   // .delete((req, res, next) => {
   //   Order.findByIdAndDelete(req.params.accountId)
   //     .then(
@@ -277,7 +277,7 @@ orderRouter
     );
   })
   .put((req, res, next) => {
-    order
+    Order
       .findById(req.params.orderId)
       .then(
         (order) => {
@@ -285,8 +285,9 @@ orderRouter
             order != null &&
             order.products.id(req.params.productId) != null
           ) {
-            if (req.body.rating) {
-              order.products.id(req.params.productId).rating = req.body.rating;
+            // body
+            if (req.body.status) {
+              order.products.id(req.params.productId).status = req.body.status;
             }
             if (req.body.product) {
               order.products.id(req.params.productId).product =
@@ -322,7 +323,8 @@ orderRouter
             order != null &&
             order.products.id(req.params.productId) != null
           ) {
-            order.products.id(req.params.productId).remove();
+            // order.products.id(req.params.productId).remove();
+            order.products.pull(req.params.productId);
             order.save().then(
               (order) => {
                 res.statusCode = 200;
