@@ -181,9 +181,10 @@ productRouter
       .then(
         (product) => {
           if (product != null) {
-            for (var i = product.comments.length - 1; i >= 0; i--) {
-              product.comments.id(product.comments[i]._id).remove();
-            }
+            // for (var i = product.comments.length - 1; i >= 0; i--) {
+            //   product.comments.id(product.comments[i]._id).remove();
+            // }
+            product.comments = [];
             product.save().then(
               (product) => {
                 res.statusCode = 200;
@@ -286,21 +287,35 @@ productRouter
             product != null &&
             product.comments.id(req.params.commentId) != null
           ) {
-            product.comments.id(req.params.commentId).remove();
-            product.save().then(
-              (product) => {
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json(product);
-              },
-              (err) => next(err)
+            // Find the index of the comment to be removed
+            const commentIndex = product.comments.findIndex(
+              (c) => c.id === req.params.commentId
             );
-          } else if (product == null) {
-            err = new Error("product " + req.params.productId + " not found");
-            err.status = 404;
-            return next(err);
+
+            if (commentIndex !== -1) {
+              // Remove the comment from the array
+              product.comments.splice(commentIndex, 1);
+
+              // Save the product after removing the comment
+              product.save().then(
+                (product) => {
+                  res.statusCode = 200;
+                  res.setHeader("Content-Type", "application/json");
+                  res.json(product); // Send back the updated product
+                },
+                (err) => next(err)
+              );
+            } else {
+              const err = new Error(
+                "Comment " + req.params.commentId + " not found"
+              );
+              err.status = 404;
+              return next(err);
+            }
           } else {
-            err = new Error("Comment " + req.params.commentId + " not found");
+            const err = new Error(
+              "Product " + req.params.productId + " not found"
+            );
             err.status = 404;
             return next(err);
           }
