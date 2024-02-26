@@ -61,7 +61,7 @@ accountRouter
     res.end("PUT operation not supported on /dishes");
   })
   .delete((req, res, next) => {
-    Accounts.remove({})
+    Accounts.deleteMany({})
       .then(
         (resp) => {
           res.statusCode = 200;
