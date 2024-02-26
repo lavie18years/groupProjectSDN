@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+var passport = require('passport');
 
 const Accounts = require("../models/accounts");
 
@@ -27,17 +28,33 @@ accountRouter
       .catch((err) => next(err));
   })
   .post((req, res, next) => {
-    Accounts.create(req.body)
-      .then(
-        (dish) => {
-          console.log("Dish Created ", dish);
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(dish);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
+    // Accounts.create(req.body)
+    //   .then(
+    //     (dish) => {
+    //       console.log("Account Created ", dish);
+    //       res.statusCode = 200;
+    //       res.setHeader("Content-Type", "application/json");
+    //       res.json(dish);
+    //     },
+    //     (err) => next(err)
+    //   )
+    //   .catch((err) => next(err));
+    Accounts.register(new Accounts({ username: req.body.username, password: req.body.password, email: req.body.email, image: req.body.image, gender: req.body.gender, status: req.body.status, phone: req.body.phone, role: req.body.role }),
+      req.body.password, (err, user) => {
+        // console.log("req",req);
+        if (err) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.json({ err: err });
+        }
+        else {
+          passport.authenticate('local')(req, res, () => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, status: 'Registration Successful!' });
+          });
+        }
+      });
   })
   .put((req, res, next) => {
     res.statusCode = 403;

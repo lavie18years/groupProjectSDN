@@ -1,13 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const Category = require("../models/category");
 const categoryRouter = express.Router();
 categoryRouter.use(bodyParser.json());
 
 categoryRouter
   .route("/")
-  .get((req, res, next) => {
+  .get(passport.authenticate('jwt', { session: false }),(req, res, next) => {
     Category.find({})
       .then(
         (category) => {
@@ -55,7 +56,7 @@ categoryRouter
     Category.findById(req.params.categoryId)
       .then(
         (category) => {
-          res.statusCode = 200;
+          res.statusCode = 200; 
           res.setHeader("Content-Type", "application/json");
           res.json(category);
         },

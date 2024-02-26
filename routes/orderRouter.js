@@ -69,42 +69,42 @@ orderRouter
       )
       .catch((err) => next(err));
   })
-  // .post((req, res, next) => {
-  //   res.statusCode = 403;
-  //   res.end("POST operation not supported on /order/" + req.params.accountId);
-  // })
-  // .put((req, res, next) => {
-  //   Order.findOneAndUpdate(
-  //     {
-  //       category: { $in: req.params.accountId },
-  //     },
-  //     {
-  //       $set: req.body,
-  //     },
-  //     { new: true }
-  //   )
-  //     .then(
-  //       (order) => {
-  //         res.statusCode = 200;
-  //         res.setHeader("Content-Type", "application/json");
-  //         res.json(order);
-  //       },
-  //       (err) => next(err)
-  //     )
-  //     .catch((err) => next(err));
-  // })
-  // .delete((req, res, next) => {
-  //   Order.findByIdAndDelete(req.params.accountId)
-  //     .then(
-  //       (resp) => {
-  //         res.statusCode = 200;
-  //         res.setHeader("Content-Type", "application/json");
-  //         res.json(resp);
-  //       },
-  //       (err) => next(err)
-  //     )
-  //     .catch((err) => next(err));
-  // });
+// .post((req, res, next) => {
+//   res.statusCode = 403;
+//   res.end("POST operation not supported on /order/" + req.params.accountId);
+// })
+// .put((req, res, next) => {
+//   Order.findOneAndUpdate(
+//     {
+//       category: { $in: req.params.accountId },
+//     },
+//     {
+//       $set: req.body,
+//     },
+//     { new: true }
+//   )
+//     .then(
+//       (order) => {
+//         res.statusCode = 200;
+//         res.setHeader("Content-Type", "application/json");
+//         res.json(order);
+//       },
+//       (err) => next(err)
+//     )
+//     .catch((err) => next(err));
+// })
+// .delete((req, res, next) => {
+//   Order.findByIdAndDelete(req.params.accountId)
+//     .then(
+//       (resp) => {
+//         res.statusCode = 200;
+//         res.setHeader("Content-Type", "application/json");
+//         res.json(resp);
+//       },
+//       (err) => next(err)
+//     )
+//     .catch((err) => next(err));
+// });
 
 orderRouter
   .route("/:orderId")
@@ -116,7 +116,7 @@ orderRouter
       .then(
         (order) => {
           res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");    
+          res.setHeader("Content-Type", "application/json");
           res.json(order);
         },
         (err) => next(err)
@@ -208,8 +208,8 @@ orderRouter
     res.statusCode = 403;
     res.end(
       "PUT operation not supported on /order/" +
-        req.params.orderId +
-        "/products"
+      req.params.orderId +
+      "/products"
     );
   })
   .delete((req, res, next) => {
@@ -217,9 +217,10 @@ orderRouter
       .then(
         (order) => {
           if (order != null) {
-            for (var i = order.products.length - 1; i >= 0; i--) {
-              order.products.id(order.products[i]._id).remove();
-            }
+            // for (var i = order.products.length - 1; i >= 0; i--) {
+            //   order.products.id(order.products[i]._id).remove();
+            // }
+            order.products = [];
             order.save().then(
               (order) => {
                 res.statusCode = 200;
@@ -271,9 +272,9 @@ orderRouter
     res.statusCode = 403;
     res.end(
       "POST operation not supported on /order/" +
-        req.params.orderId +
-        "/products/" +
-        req.params.productId
+      req.params.orderId +
+      "/products/" +
+      req.params.productId
     );
   })
   .put((req, res, next) => {
