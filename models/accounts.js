@@ -22,9 +22,11 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 const accountSchema = new Schema(
   {
+    // bắt buộc phải username
     username: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,

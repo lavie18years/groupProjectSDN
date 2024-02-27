@@ -16,9 +16,9 @@ exports.getToken = function (account) {
 };
 
 
-var opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = config.secretKey;
+// var opts = {};
+// opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+// opts.secretOrKey = config.secretKey;
 
 
 // exports.jwtPassport = passport.use(new JwtStrategy(opts,
@@ -36,6 +36,9 @@ opts.secretOrKey = config.secretKey;
 //           }
 //       });
 //   }));
+
+
+// bắt buộc phải dùng promise không dùng được callback
 exports.jwtPassport = passport.use(
   new JwtStrategy(
       {

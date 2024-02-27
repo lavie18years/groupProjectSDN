@@ -39,6 +39,8 @@ accountRouter
     //     (err) => next(err)
     //   )
     //   .catch((err) => next(err));
+
+    // bắt giúp mình được trường hợp trùng username và gmail
     Accounts.register(new Accounts({ username: req.body.username, password: req.body.password, email: req.body.email, image: req.body.image, gender: req.body.gender, status: req.body.status, phone: req.body.phone, role: req.body.role }),
       req.body.password, (err, user) => {
         // console.log("req",req);
