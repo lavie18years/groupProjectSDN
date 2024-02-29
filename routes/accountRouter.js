@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var passport = require('passport');
+const bcrypt = require('bcrypt');
 
 const Accounts = require("../models/accounts");
 
@@ -41,22 +42,28 @@ accountRouter
     //   .catch((err) => next(err));
 
     // bắt giúp mình được trường hợp trùng username và gmail
-    Accounts.register(new Accounts({ username: req.body.username, password: req.body.password, email: req.body.email, image: req.body.image, gender: req.body.gender, status: req.body.status, phone: req.body.phone, role: req.body.role }),
-      req.body.password, (err, user) => {
-        // console.log("req",req);
-        if (err) {
-          res.statusCode = 500;
-          res.setHeader('Content-Type', 'application/json');
-          res.json({ err: err });
-        }
-        else {
-          passport.authenticate('local')(req, res, () => {
-            res.statusCode = 200;
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: 'Could not create hash!' });
+      }
+      Accounts.register(new Accounts({ username: req.body.username, password: hash, email: req.body.email, image: req.body.image, gender: req.body.gender, status: req.body.status, phone: req.body.phone, role: req.body.role }),
+        hash, (err, user) => {
+          // console.log("req",req);
+          if (err) {
+            res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ success: true, status: 'Registration Successful!' });
-          });
-        }
-      });
+            res.json({ err: err });
+          }
+          else {
+            // passport.authenticate('local')(req, res, () => {
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'application/json');
+              res.json({ success: true, status: 'Registration Successful!' });
+            // });
+          }
+        });
+    });
+
   })
   .put((req, res, next) => {
     res.statusCode = 403;
